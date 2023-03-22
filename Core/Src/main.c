@@ -52,7 +52,7 @@ uint8_t MotorControlEnable = 0;
 
 uint32_t InputCaptureBuffer[IC_BUFFER_SIZE];
 float averageRisingedgePeriod;
-float MotorSetDuty = 100;
+float MotorSetDuty;
 float MotorReadRPM;
 float MotorSetRPM;
 float ap;
@@ -136,8 +136,8 @@ int main(void)
 	  {
 		  timestamp = HAL_GetTick() + 500;
 		  averageRisingedgePeriod = IC_Calc_Period();//pulling read rpm in ic
-		  ap = IC_Calc_Period();
 		  MotorReadRPM = 60 / ( 64 * 12 * averageRisingedgePeriod * 0.000001);//change from ic to rpm
+		  ap = IC_Calc_Period();
 		  readrpm = 60 / ( 64 * 12 * ap * 0.000001);
 //motor control
 	  if (MotorControlEnable == 1){
@@ -168,7 +168,6 @@ int main(void)
 			  MotorReadRPM = 0;
 			  averageRisingedgePeriod = 0;}
 	  }
-
 	  __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,MotorSetDuty);
 
   }
