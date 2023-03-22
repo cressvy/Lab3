@@ -134,11 +134,9 @@ int main(void)
 	  static uint32_t timestamp = 0;
 	  if (HAL_GetTick() >= timestamp)
 	  {
-		  timestamp = HAL_GetTick() + 500;
+		  timestamp = HAL_GetTick() + 75;
 		  averageRisingedgePeriod = IC_Calc_Period();//pulling read rpm in ic
-		  MotorReadRPM = 60 / ( 64 * 12 * averageRisingedgePeriod * 0.000001);//change from ic to rpm
-		  ap = IC_Calc_Period();
-		  readrpm = 60 / ( 64 * 12 * ap * 0.000001);
+		  MotorReadRPM = (60 * 1000000) / (64 * 12 * averageRisingedgePeriod);//change from ic to rpm
 //motor control
 	  if (MotorControlEnable == 1){
 		  if (MotorSetRPM == 0)
@@ -162,9 +160,8 @@ int main(void)
 	  else if (MotorControlEnable == 0){
 		  if (MotorSetDuty > 100){
 			  MotorSetDuty = 100;}
-		  else if (MotorSetDuty < 0){
-			  MotorSetDuty = 0;}
-		  else if (MotorSetDuty == 0){
+		  else if (MotorSetDuty <= 0){
+			  MotorSetDuty = 0;
 			  MotorReadRPM = 0;
 			  averageRisingedgePeriod = 0;}
 	  }
